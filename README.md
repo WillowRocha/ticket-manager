@@ -1,2 +1,2 @@
-# ticket-manager
-Tickets Manager for Queue, developed for PariPassu challenge.
+# Tickets Manager
+Software for managing tickets of a queue. Developed for PariPassu challenge.
