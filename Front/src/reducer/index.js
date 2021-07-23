@@ -5,7 +5,7 @@ const initialState = {
   lastTickets: []
 };
 
-export default (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_DATA:
       return {...state, ...action.payload};
@@ -15,3 +15,5 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export default reducer;

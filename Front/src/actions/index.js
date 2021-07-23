@@ -11,6 +11,18 @@ export const loadData = () => dispatch => {
     .catch(handleException);
 }
 
+export const generateNewTicket = ticketType => () => {
+  Service.generateNewTicket(ticketType);
+}
+
+export const callNextTicket = () => {
+  Service.callNextTicket();
+}
+
+export const resetCouting = () => {
+  Service.resetCouting();
+}
+
 export const clear = () => dispatch => {
   dispatch({type: CLEAR});
 }

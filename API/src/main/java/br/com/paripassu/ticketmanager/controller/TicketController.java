@@ -14,7 +14,7 @@ public class TicketController {
     private TicketService service;
 
     @PostMapping("/generate")
-    public void generateTicket(@RequestParam TicketType type) {
+    public void generateTicket(@RequestBody TicketType type) {
         service.generateTicket(type);
     }
 

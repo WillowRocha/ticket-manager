@@ -64,6 +64,13 @@ export const SidePanel = styled.div`
   align-items: center;
 `;
 
+export const MessageWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 export const Typography = styled.h1`
   font-family: ${({family = 'Poppins,sans-serif'}) => family};
   color: ${({color = 'white'}) => color};

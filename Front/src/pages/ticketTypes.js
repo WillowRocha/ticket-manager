@@ -1,0 +1,2 @@
+export const ORDINARY = 'ORDINARY';
+export const PREFERENTIAL = 'PREFERENTIAL';

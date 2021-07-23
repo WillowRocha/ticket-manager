@@ -40,7 +40,7 @@ class DateTimeComponent extends React.Component {
         <Span><CalendarToday /></Span>
         <Span>{format(currentDate, 'yyyy-MM-dd')}</Span>
         <Span left={20}><AccessTime /></Span>
-        <Span>{format(currentDate, ' hh:mm:ss')}</Span>
+        <Span>{format(currentDate, ' HH:mm:ss')}</Span>
       </Container>
     );
   }
