@@ -27,19 +27,24 @@ O sistema conta com 3 telas:
 Para rodar o projeto é necessário ter o Docker instalado na máquina hospedeira.
 
 ## Ambiente Docker:
+- O projeto foi separado em três containeres Docker, deixando assim, Front, API e Banco em locais separados.
+
+### Rede
+- Rode este comando para criar a rede necessária para comunicar entre API e Front
+
 1. docker network create -d bridge ticket-manager-network
 
 ### API: 
 - Navegue até o diretório API e rode os seguintes comandos:
 
-1. mvn clean package -DskipTests
-2. docker build -t ticket-manager-api .
-3. docker-compose up -d
+1. `mvn clean package -DskipTests`
+2. `docker build -t ticket-manager-api .`
+3. `docker-compose up -d`
 
 ### FRONT: -
- Navegue até o diretório Front e rode os seguintes comandos:
-
-1. docker build -t ticket-manager-front:dev .
-2. docker run -d -it --rm --name front --network=ticket-manager-network -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true ticket-manager-front:dev
+- Navegue até o diretório Front e rode os seguintes comandos:
 
 Atenção 1: Utilizar o `npm` para o install, pois necessitamos do arquivo `package-lock.json`.
+
+1. `docker build -t ticket-manager-front:dev .`
+2. `docker run -d -it --rm --name front --network=ticket-manager-network -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true ticket-manager-front:dev`
