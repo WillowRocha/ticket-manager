@@ -41,7 +41,7 @@ Para rodar o projeto é necessário ter o Docker instalado na máquina hospedeir
 2. `docker build -t ticket-manager-api .`
 3. `docker-compose up -d`
 
-### FRONT: -
+### FRONT:
 - Navegue até o diretório Front e rode os seguintes comandos:
 
 Atenção 1: Utilizar o `npm` para o install, pois necessitamos do arquivo `package-lock.json`.
