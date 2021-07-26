@@ -10,6 +10,8 @@ O sistema conta com 3 telas:
 - Cliente - /customer
 - Gerente - /manager
 
+Nota: Foi solicitado que a comunicação entre cliente e servidor fosse realizada utilizando a arquitetura REST, por isso a atualização de novas senhas chamadas foi feita através de requests partindo do Front, ao invés de usar um WebSocket, que deixaria a comunicação e atualizações mais fluídas.
+
 ### Painel
 - Mostra a última semana chamada, e cinco das anteriores.
 
