@@ -39,7 +39,7 @@ Para rodar o projeto é necessário ter o Docker instalado na máquina hospedeir
 ### API: 
 - Navegue até o diretório API e rode os seguintes comandos:
 
-1. `mvn clean package -DskipTests`
+1. `mvn clean package`
 2. `docker build -t ticket-manager-api .`
 3. `docker-compose up -d`
 
