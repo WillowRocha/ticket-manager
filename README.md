@@ -48,3 +48,6 @@ Atenção 1: Utilizar o `npm` para o install, pois necessitamos do arquivo `pack
 
 1. `docker build -t ticket-manager-front:dev .`
 2. `docker run -d -it --rm --name front --network=ticket-manager-network -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true ticket-manager-front:dev`
+
+#### Informações para acesso:
+- Após rodar os comandos acima para API e front, eles estarão disponíveis, respectivamente, nas postas 8081 e 3001 no localhost.
