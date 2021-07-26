@@ -5,15 +5,20 @@ import br.com.paripassu.ticketmanager.model.ticket.NextTicket;
 import br.com.paripassu.ticketmanager.model.ticket.Ticket;
 import br.com.paripassu.ticketmanager.model.ticket.TicketStatus;
 import br.com.paripassu.ticketmanager.model.ticket.TicketType;
+import br.com.paripassu.ticketmanager.model.user.UserType;
 import br.com.paripassu.ticketmanager.repo.ticket.NextTicketRepo;
 import br.com.paripassu.ticketmanager.repo.ticket.TicketRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static br.com.paripassu.ticketmanager.model.user.UserType.CUSTOMER;
+import static br.com.paripassu.ticketmanager.model.user.UserType.MANAGER;
 
 @Service
 public class TicketService {
@@ -30,12 +35,13 @@ public class TicketService {
     }
 
     @Transactional
-    public void generateTicket(TicketType type) {
-        if (type == null) {
-            throw new IllegalArgumentException("Type cannot be null");
+    public void generateTicket(UserType userType, TicketType ticketType) {
+        checkDefaultPermission(userType);
+        if (ticketType == null) {
+            throw new IllegalArgumentException("Ticket type cannot be null");
         }
-        NextTicket next = nextTicketRepo.findById(type)
-                .orElse(getNewNextTicket(type));
+        NextTicket next = nextTicketRepo.findById(ticketType)
+                .orElse(getNewNextTicket(ticketType));
 
         Ticket ticket = getNewTicket(next);
 
@@ -44,22 +50,24 @@ public class TicketService {
         repo.save(ticket);
     }
 
-    public PanelDataResponse getPanelData() {
+    public PanelDataResponse getPanelData(UserType userType) {
+        checkDefaultPermission(userType);
         PanelDataResponse response = new PanelDataResponse();
 
-        Ticket lastCalledTicket = repo.findCurrentTicketByStatus(TicketStatus.DONE.name());
+        Ticket lastCalledTicket = repo.findCurrentTicket(TicketStatus.DONE.name());
         if (lastCalledTicket == null) {
             return new PanelDataResponse();
         }
-        ArrayList<Ticket> lastTickets = repo.findPreviousTicketsByStatus(TicketStatus.DONE.name(), 5);
+        ArrayList<Ticket> previousCalledTickets = repo.findPreviousTicketsByStatus(TicketStatus.DONE.name(), 5);
 
         response.setCurrentTicketCode(this.parseTicketNumber(lastCalledTicket));
-        response.setLastTickets(this.getParsedTicketNumbers(lastTickets));
+        response.setLastTickets(this.getParsedTicketNumbers(previousCalledTickets));
         return response;
     }
 
-    public void callNextTicket() {
-        Ticket ticket = repo.findNextTicketStatus(TicketStatus.PENDING.name());
+    public void callNextTicket(UserType userType) {
+        checkManagerPermission(userType);
+        Ticket ticket = repo.findNextTicket(TicketStatus.PENDING.name());
 
         if (ticket != null) {
             ticket.setStatus(TicketStatus.DONE);
@@ -69,7 +77,8 @@ public class TicketService {
     }
 
     @Transactional
-    public void skipAllTicketsAndCreateNewSeries() {
+    public void skipAllTicketsAndCreateNewSeries(UserType userType) {
+        checkManagerPermission(userType);
         ArrayList<Ticket> tickets = repo.findAllByStatus(TicketStatus.PENDING);
         for (Ticket ticket : tickets) {
             ticket.setStatus(TicketStatus.SKIPPED);
@@ -82,6 +91,18 @@ public class TicketService {
         }
         repo.saveAll(tickets);
         nextTicketRepo.saveAll(nextTickets);
+    }
+
+    private void checkManagerPermission(UserType userType) {
+        if (userType != MANAGER) {
+            throw new AccessDeniedException("User not allowed to perform this action");
+        }
+    }
+
+    private void checkDefaultPermission(UserType userType) {
+        if (userType != MANAGER && userType != CUSTOMER) {
+            throw new AccessDeniedException("User not allowed to perform this action");
+        }
     }
 
     private NextTicket getNewNextTicket(TicketType type) {
